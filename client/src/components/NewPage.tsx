@@ -1,4 +1,5 @@
 import { useParams } from "react-router-dom";
+import type { NewsType } from "../types/new";
 
 const NewPage = () => {
 	const { id } = useParams();
@@ -32,7 +33,7 @@ const NewPage = () => {
 		},
 	];
 
-	let item;
+	let item: NewsType | undefined;
 	if (id) {
 		item = news.find((n) => n.id === parseInt(id, 10));
 	}

@@ -54,12 +54,13 @@ export default function RegisterForm({ onSwitch, addUser }: RegisterFormProps) {
 			</button>
 			<p className="mt-2 text-sm text-gray-600">
 				Have already account?{" "}
-				<span
-					className="text-blue-600 hover:underline cursor-pointer"
+				<button
+					type="button"
+					className="text-blue-600 hover:underline cursor-pointer bg-transparent border-0 p-0"
 					onClick={onSwitch}
 				>
 					Log in
-				</span>
+				</button>
 			</p>
 		</form>
 	);
