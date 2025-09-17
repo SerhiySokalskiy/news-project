@@ -1,63 +1,68 @@
-import { useState } from "react";
-import type { User } from "../types/user";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { useUserStore } from "../store/useUserStore";
+import { type LoginSchema, loginSchema } from "../validation/schemas";
 
 interface LoginFormProps {
 	onSwitch: () => void;
-	users: User[];
 	onLoginSuccess: () => void;
 }
 
 export default function LoginForm({
 	onSwitch,
-	users,
 	onLoginSuccess,
 }: LoginFormProps) {
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
-	const [error, setError] = useState("");
+	const login = useUserStore((state) => state.login);
 
-	const handleSubmit = (e: React.FormEvent) => {
-		e.preventDefault();
+	const {
+		register,
+		handleSubmit,
+		setError,
+		formState: { errors },
+	} = useForm<LoginSchema>({
+		resolver: zodResolver(loginSchema),
+	});
 
-		const user = users.find(
-			(u) => u.email === email && u.password === password,
-		);
-
+	const onSubmit = (data: LoginSchema) => {
+		const user = login(data.email, data.password);
 		if (!user) {
-			setError("Пользователь не найден");
+			setError("email", { message: "User hasnt been found" });
 		} else {
-			setError("");
 			onLoginSuccess();
 		}
 	};
 
 	return (
-		<form className="flex flex-col gap-2" onSubmit={handleSubmit}>
+		<form className="flex flex-col gap-2" onSubmit={handleSubmit(onSubmit)}>
 			<h2 className="text-xl font-bold mb-2">Logging in</h2>
-			{error && <div className="text-red-500">{error}</div>}
 
 			<input
-				onChange={(e) => setEmail(e.target.value)}
-				value={email}
-				name="email"
+				{...register("email")}
 				className="border p-2 rounded"
 				type="email"
 				placeholder="Email"
 			/>
+			{errors.email && (
+				<div className="text-red-500">{errors.email.message}</div>
+			)}
+
 			<input
-				onChange={(e) => setPassword(e.target.value)}
-				value={password}
-				name="password"
+				{...register("password")}
 				className="border p-2 rounded"
 				type="password"
 				placeholder="Password"
 			/>
+			{errors.password && (
+				<div className="text-red-500">{errors.password.message}</div>
+			)}
+
 			<button
 				type="submit"
 				className="mt-2 bg-green-600 text-white p-2 rounded hover:bg-green-700 transition-colors"
 			>
 				Log in
 			</button>
+
 			<p className="mt-2 text-sm text-gray-600">
 				Have no account?{" "}
 				<button
