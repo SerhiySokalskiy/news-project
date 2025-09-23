@@ -1,16 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
-import NewPreview from "./NewPreview";
 import type { NewsType } from "../types/new";
+import NewPreview from "./NewPreview";
 
 const NewsPage = () => {
 	const fetchNews = async (): Promise<NewsType[]> => {
-    const res = await fetch("http://localhost:3000/feed");
-    if (!res.ok) {
-      throw new Error("Failed to fetch news");
-    }
-    const data = await res.json();
-    return data.feed;
-  	};
+		const res = await fetch(`${import.meta.env.VITE_API_URL}/feed`);
+		if (!res.ok) {
+			throw new Error("Failed to fetch news");
+		}
+		const data = await res.json();
+		return data.feed;
+	};
 
 	const {
 		data: news,
