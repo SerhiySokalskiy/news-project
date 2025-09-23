@@ -1,7 +1,7 @@
 export type NewsType = {
-	id: number;
-	title: string;
-	text: string;
-	img: string;
-	fulltext: string;
+  id: string;
+  title: string;
+  text: string;
+  image: string;
+  date: string;
 };

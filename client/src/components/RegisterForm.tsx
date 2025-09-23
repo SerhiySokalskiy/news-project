@@ -1,67 +1,78 @@
-import { useState } from "react";
-import type { User } from "../types/user";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { registerSchema, type RegisterSchema } from "../validation/schemas";
+import TextInput from "./TextInput";
+import Button from "./Button";
 
 interface RegisterFormProps {
-	onSwitch: () => void;
-	addUser: (user: User) => void;
+  onSwitch: () => void;
 }
 
-export default function RegisterForm({ onSwitch, addUser }: RegisterFormProps) {
-	const [name, setName] = useState("");
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
+export default function RegisterForm({ onSwitch }: RegisterFormProps) {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setError,
+    formState: { errors },
+  } = useForm<RegisterSchema>({
+    resolver: zodResolver(registerSchema),
+  });
 
-	const handleSubmit = (e: React.FormEvent) => {
-		e.preventDefault();
-		addUser({ name, email, password });
-		setName("");
-		setEmail("");
-		setPassword("");
-	};
+  const onSubmit = async (data: RegisterSchema) => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/registration`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
 
-	return (
-		<form className="flex flex-col gap-2" onSubmit={handleSubmit}>
-			<h2 className="text-xl font-bold mb-2">Registration</h2>
-			<input
-				name="name"
-				value={name}
-				onChange={(e) => setName(e.target.value)}
-				className="border p-2 rounded"
-				type="text"
-				placeholder="Name"
-			/>
-			<input
-				name="email"
-				value={email}
-				onChange={(e) => setEmail(e.target.value)}
-				className="border p-2 rounded"
-				type="email"
-				placeholder="Email"
-			/>
-			<input
-				name="password"
-				value={password}
-				onChange={(e) => setPassword(e.target.value)}
-				className="border p-2 rounded"
-				type="password"
-				placeholder="Password"
-			/>
-			<button
-				type="submit"
-				className="mt-2 bg-green-600 text-white p-2 rounded hover:bg-green-700 transition-colors"
-			>
-				Registrate
-			</button>
-			<p className="mt-2 text-sm text-gray-600">
-				Have already account?{" "}
-				<button
-					type="button"
-					className="text-blue-600 hover:underline cursor-pointer bg-transparent border-0 p-0"
-					onClick={onSwitch}
-				>
-					Log in
-				</button>
-			</p>
-		</form>
-	);
+      if (!res.ok) {
+        const errData = await res.json();
+        setError("email", { message: errData.message || "Registration failed" });
+        return;
+      }
+
+      reset();
+      onSwitch(); // переключаємо на логін після успішної реєстрації
+    } catch {
+      setError("email", { message: "Server error" });
+    }
+  };
+
+  return (
+    <form className="flex flex-col gap-2" onSubmit={handleSubmit(onSubmit)}>
+      <h2 className="text-xl font-bold mb-2">Registration</h2>
+
+      <TextInput
+        {...register("name")}
+        type="text"
+        placeholder="Name"
+      />
+      {errors.name && <div className="text-red-500">{errors.name.message}</div>}
+
+      <TextInput
+        {...register("email")}
+        type="email"
+        placeholder="Email"
+      />
+      {errors.email && <div className="text-red-500">{errors.email.message}</div>}
+
+      <TextInput
+        {...register("password")}
+        type="password"
+        placeholder="Password"
+      />
+      {errors.password && <div className="text-red-500">{errors.password.message}</div>}
+
+      <Button type="submit">Register</Button>
+
+      <p className="mt-2 text-sm text-gray-600">
+        Have already account?{" "}
+        <Button type="button" variant="link" onClick={onSwitch}>
+          Log in
+        </Button>
+      </p>
+    </form>
+  );
 }

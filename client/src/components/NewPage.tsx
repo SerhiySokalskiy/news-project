@@ -1,68 +1,59 @@
+import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
-import type { NewsType } from "../types/new";
+
+export type NewsFullType = {
+  id: string;
+  url: string;
+  image: string;
+  title: string;
+  text: string[];
+  date?: string;
+};
 
 const NewPage = () => {
-	const { id } = useParams();
-	const news = [
-		{
-			id: 1,
-			title:
-				"Strengthening the STEM Teaching Capacity of Secondary School Teachers in Ho Chi Minh City",
-			text: "HO CHI MINH CITY, VIETNAM – August 15–16, 2025 – The Kenan Foundation Asia, in collaboration with the Ministry of Education and Training, successfully organized a Teacher Training Course on STEM Education. The training enhanced the capacity of teachers from eight secondary schools to design and implement interdisciplinary STEM lesson plans. This training activity was part of the wider “Boeing Technology Enhanced Learning Vietnam 2021–2025” program, implemented in Ho Chi Minh City in 2025 with sponsorship from the Boeing Company. Kenan was honored to welcome representatives from the Department of General Education – Ministry of Education and Training, the Ho Chi Minh City Department of Education and Training, and Mr. Michael Nguyen – Country Director of Boeing Vietnam. The training brought together 56 teachers from eight secondary schools across Ho Chi Minh City, offering them access to essential knowledge, practical skills, and valuable resources. These efforts aimed to empower educators to inspire learning and cultivate creativity among students, particularly in the areas of science, technology, and creative innovation.Participants were guided through the process of designing and delivering interdisciplinary STEM lesson plans, integrating artificial intelligence (AI) tools to support lesson development and classroom application. In addition, the program supported participating schools in incorporating STEM education into both subject-specific and school-wide plans for the 2025–2026 academic year. This activity contributes to enhancing teaching quality, supporting Vietnam’s ongoing education reform, and fostering the holistic development of students’ competencies in a rapidly evolving educational context.",
-			img: "C4F971A9C045F3EEA9FD811A6963325A73328EE2.jpg",
-			fulltext:
-				"HO CHI MINH CITY, VIETNAM – August 15–16, 2025 – The Kenan Foundation Asia, in collaboration with the Ministry of Education and Training, successfully organized a Teacher Training Course on STEM Education. The training enhanced the capacity of teachers from eight secondary schools to design and implement interdisciplinary STEM lesson plans. This training activity was part of the wider “Boeing Technology Enhanced Learning Vietnam 2021–2025” program, implemented in Ho Chi Minh City in 2025 with sponsorship from the Boeing Company. Kenan was honored to welcome representatives from the Department of General Education – Ministry of Education and Training, the Ho Chi Minh City Department of Education and Training, and Mr. Michael Nguyen – Country Director of Boeing Vietnam. The training brought together 56 teachers from eight secondary schools across Ho Chi Minh City, offering them access to essential knowledge, practical skills, and valuable resources. These efforts aimed to empower educators to inspire learning and cultivate creativity among students, particularly in the areas of science, technology, and creative innovation. Participants were guided through the process of designing and delivering interdisciplinary STEM lesson plans, integrating artificial intelligence (AI) tools to support lesson development and classroom application. In addition, the program supported participating schools in incorporating STEM education into both subject-specific and school-wide plans for the 2025–2026 academic year. This activity contributes to enhancing teaching quality, supporting Vietnam’s ongoing education reform, and fostering the holistic development of students’ competencies in a rapidly evolving educational context. Remarks from Project Stakeholders Mr. Richard Bernhard, Chief Representative of Kenan Foundation Asia in Vietnam, stated: “Since 2018, the “Boeing Technology Enhanced Learning Vietnam” project has demonstrated a sustainable strategy for strengthening teachers’ capacity and advancing integrated STEM education in Vietnam. The collaboration between Kenan, Boeing, and the Ministry of Education and Training has not only delivered impressive results in terms of the number of teachers trained, STEM lesson plans developed, and students reached, but more importantly, it has built a lasting foundation for STEM to become an essential part of general education. Now it is a pivotal moment for us to consolidate these achievements and ensure that the project’s impact will continue to expand, equipping Vietnam’s younger generations with the skills and mindset they need to thrive in an era of innovation and technology.” Dr. Do Duc Que, Deputy Director General of the Department of General Education, Ministry of Education and Training, stated: “We need to further enhance the effectiveness of STEM education implementation in general education to develop students’ qualities and competencies in line with the goals of the 2018 General Education Curriculum. This is an opportunity for students to maximize their potential to adapt to the development of science and technology, and innovation in accordance with the guidelines of the Party and Government of Vietnam, thereby creating a high-quality workforce for the country.”",
-		},
-		{
-			id: 2,
-			title:
-				"Strengthening the STEM Teaching Capacity of Secondary School Teachers in Ho Chi Minh City",
-			text: "HO CHI MINH CITY, VIETNAM – August 15–16, 2025 – The Kenan Foundation Asia, in collaboration with the Ministry of Education and Training, successfully organized a Teacher Training Course on STEM Education. The training enhanced the capacity of teachers from eight secondary schools to design and implement interdisciplinary STEM lesson plans. This training activity was part of the wider “Boeing Technology Enhanced Learning Vietnam 2021–2025” program, implemented in Ho Chi Minh City in 2025 with sponsorship from the Boeing Company. Kenan was honored to welcome representatives from the Department of General Education – Ministry of Education and Training, the Ho Chi Minh City Department of Education and Training, and Mr. Michael Nguyen – Country Director of Boeing Vietnam. The training brought together 56 teachers from eight secondary schools across Ho Chi Minh City, offering them access to essential knowledge, practical skills, and valuable resources. These efforts aimed to empower educators to inspire learning and cultivate creativity among students, particularly in the areas of science, technology, and creative innovation.Participants were guided through the process of designing and delivering interdisciplinary STEM lesson plans, integrating artificial intelligence (AI) tools to support lesson development and classroom application. In addition, the program supported participating schools in incorporating STEM education into both subject-specific and school-wide plans for the 2025–2026 academic year. This activity contributes to enhancing teaching quality, supporting Vietnam’s ongoing education reform, and fostering the holistic development of students’ competencies in a rapidly evolving educational context.",
-			img: "C4F971A9C045F3EEA9FD811A6963325A73328EE2.jpg",
-			fulltext:
-				"HO CHI MINH CITY, VIETNAM – August 15–16, 2025 – The Kenan Foundation Asia, in collaboration with the Ministry of Education and Training, successfully organized a Teacher Training Course on STEM Education. The training enhanced the capacity of teachers from eight secondary schools to design and implement interdisciplinary STEM lesson plans. This training activity was part of the wider “Boeing Technology Enhanced Learning Vietnam 2021–2025” program, implemented in Ho Chi Minh City in 2025 with sponsorship from the Boeing Company. Kenan was honored to welcome representatives from the Department of General Education – Ministry of Education and Training, the Ho Chi Minh City Department of Education and Training, and Mr. Michael Nguyen – Country Director of Boeing Vietnam. The training brought together 56 teachers from eight secondary schools across Ho Chi Minh City, offering them access to essential knowledge, practical skills, and valuable resources. These efforts aimed to empower educators to inspire learning and cultivate creativity among students, particularly in the areas of science, technology, and creative innovation. Participants were guided through the process of designing and delivering interdisciplinary STEM lesson plans, integrating artificial intelligence (AI) tools to support lesson development and classroom application. In addition, the program supported participating schools in incorporating STEM education into both subject-specific and school-wide plans for the 2025–2026 academic year. This activity contributes to enhancing teaching quality, supporting Vietnam’s ongoing education reform, and fostering the holistic development of students’ competencies in a rapidly evolving educational context. Remarks from Project Stakeholders Mr. Richard Bernhard, Chief Representative of Kenan Foundation Asia in Vietnam, stated: “Since 2018, the “Boeing Technology Enhanced Learning Vietnam” project has demonstrated a sustainable strategy for strengthening teachers’ capacity and advancing integrated STEM education in Vietnam. The collaboration between Kenan, Boeing, and the Ministry of Education and Training has not only delivered impressive results in terms of the number of teachers trained, STEM lesson plans developed, and students reached, but more importantly, it has built a lasting foundation for STEM to become an essential part of general education. Now it is a pivotal moment for us to consolidate these achievements and ensure that the project’s impact will continue to expand, equipping Vietnam’s younger generations with the skills and mindset they need to thrive in an era of innovation and technology.” Dr. Do Duc Que, Deputy Director General of the Department of General Education, Ministry of Education and Training, stated: “We need to further enhance the effectiveness of STEM education implementation in general education to develop students’ qualities and competencies in line with the goals of the 2018 General Education Curriculum. This is an opportunity for students to maximize their potential to adapt to the development of science and technology, and innovation in accordance with the guidelines of the Party and Government of Vietnam, thereby creating a high-quality workforce for the country.”",
-		},
-		{
-			id: 3,
-			title:
-				"Strengthening the STEM Teaching Capacity of Secondary School Teachers in Ho Chi Minh City",
-			text: "HO CHI MINH CITY, VIETNAM – August 15–16, 2025 – The Kenan Foundation Asia, in collaboration with the Ministry of Education and Training, successfully organized a Teacher Training Course on STEM Education. The training enhanced the capacity of teachers from eight secondary schools to design and implement interdisciplinary STEM lesson plans. This training activity was part of the wider “Boeing Technology Enhanced Learning Vietnam 2021–2025” program, implemented in Ho Chi Minh City in 2025 with sponsorship from the Boeing Company. Kenan was honored to welcome representatives from the Department of General Education – Ministry of Education and Training, the Ho Chi Minh City Department of Education and Training, and Mr. Michael Nguyen – Country Director of Boeing Vietnam. The training brought together 56 teachers from eight secondary schools across Ho Chi Minh City, offering them access to essential knowledge, practical skills, and valuable resources. These efforts aimed to empower educators to inspire learning and cultivate creativity among students, particularly in the areas of science, technology, and creative innovation.Participants were guided through the process of designing and delivering interdisciplinary STEM lesson plans, integrating artificial intelligence (AI) tools to support lesson development and classroom application. In addition, the program supported participating schools in incorporating STEM education into both subject-specific and school-wide plans for the 2025–2026 academic year. This activity contributes to enhancing teaching quality, supporting Vietnam’s ongoing education reform, and fostering the holistic development of students’ competencies in a rapidly evolving educational context.",
-			img: "C4F971A9C045F3EEA9FD811A6963325A73328EE2.jpg",
-			fulltext:
-				"HO CHI MINH CITY, VIETNAM – August 15–16, 2025 – The Kenan Foundation Asia, in collaboration with the Ministry of Education and Training, successfully organized a Teacher Training Course on STEM Education. The training enhanced the capacity of teachers from eight secondary schools to design and implement interdisciplinary STEM lesson plans. This training activity was part of the wider “Boeing Technology Enhanced Learning Vietnam 2021–2025” program, implemented in Ho Chi Minh City in 2025 with sponsorship from the Boeing Company. Kenan was honored to welcome representatives from the Department of General Education – Ministry of Education and Training, the Ho Chi Minh City Department of Education and Training, and Mr. Michael Nguyen – Country Director of Boeing Vietnam. The training brought together 56 teachers from eight secondary schools across Ho Chi Minh City, offering them access to essential knowledge, practical skills, and valuable resources. These efforts aimed to empower educators to inspire learning and cultivate creativity among students, particularly in the areas of science, technology, and creative innovation. Participants were guided through the process of designing and delivering interdisciplinary STEM lesson plans, integrating artificial intelligence (AI) tools to support lesson development and classroom application. In addition, the program supported participating schools in incorporating STEM education into both subject-specific and school-wide plans for the 2025–2026 academic year. This activity contributes to enhancing teaching quality, supporting Vietnam’s ongoing education reform, and fostering the holistic development of students’ competencies in a rapidly evolving educational context. Remarks from Project Stakeholders Mr. Richard Bernhard, Chief Representative of Kenan Foundation Asia in Vietnam, stated: “Since 2018, the “Boeing Technology Enhanced Learning Vietnam” project has demonstrated a sustainable strategy for strengthening teachers’ capacity and advancing integrated STEM education in Vietnam. The collaboration between Kenan, Boeing, and the Ministry of Education and Training has not only delivered impressive results in terms of the number of teachers trained, STEM lesson plans developed, and students reached, but more importantly, it has built a lasting foundation for STEM to become an essential part of general education. Now it is a pivotal moment for us to consolidate these achievements and ensure that the project’s impact will continue to expand, equipping Vietnam’s younger generations with the skills and mindset they need to thrive in an era of innovation and technology.” Dr. Do Duc Que, Deputy Director General of the Department of General Education, Ministry of Education and Training, stated: “We need to further enhance the effectiveness of STEM education implementation in general education to develop students’ qualities and competencies in line with the goals of the 2018 General Education Curriculum. This is an opportunity for students to maximize their potential to adapt to the development of science and technology, and innovation in accordance with the guidelines of the Party and Government of Vietnam, thereby creating a high-quality workforce for the country.”",
-		},
-	];
+  const { id } = useParams();
 
-	let item: NewsType | undefined;
-	if (id) {
-		item = news.find((n) => n.id === parseInt(id, 10));
-	}
+  const fetchNewsItem = async (id: string): Promise<NewsFullType> => {
+    const res = await fetch(`http://localhost:3000/feed/${id}`);
+    if (!res.ok) throw new Error("Failed to fetch news");
+    return res.json();
+  };
 
-	return (
-		<div className="bg-gray-100 min-h-screen py-8">
-			<div className="max-w-5xl mx-auto px-4">
-				{item ? (
-					<div className="bg-white rounded-lg shadow-lg overflow-hidden">
-						<img
-							src={`/${item.img}`}
-							alt="news preview"
-							className="w-full h-64 md:h-96 object-cover"
-						/>
-						<div className="p-6 flex flex-col gap-4">
-							<h1 className="text-3xl font-bold">{item.title}</h1>
-							<p className="text-gray-700 leading-relaxed whitespace-pre-line">
-								{item.fulltext}
-							</p>
-						</div>
-					</div>
-				) : (
-					<div className="text-center text-xl text-gray-500">
-						The news hasn&apos;t been found
-					</div>
-				)}
-			</div>
-		</div>
-	);
+  const { data: item, isLoading, isError } = useQuery<NewsFullType, Error>({
+    queryKey: ["news", id],
+    queryFn: () => (id ? fetchNewsItem(id) : Promise.reject(new Error("No ID"))),
+    enabled: !!id,
+  });
+
+  if (isLoading) return <p className="text-center mt-10">Loading...</p>;
+  if (isError) return <p className="text-center mt-10 text-red-500">Error loading news</p>;
+
+  return (
+    <div className="bg-gray-100 min-h-screen py-8">
+      <div className="max-w-5xl mx-auto px-4">
+        {item ? (
+          <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+            <img
+              src={item.image}
+              alt={item.title}
+              className="w-full h-64 md:h-96 object-cover"
+              loading="lazy"
+            />
+            <div className="p-6 flex flex-col gap-4">
+              <h1 className="text-3xl font-bold">{item.title}</h1>
+              {item.text.map((paragraph, index) => (
+                <p key={index} className="text-gray-700 leading-relaxed whitespace-pre-line mb-4">
+                  {paragraph}
+                </p>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="text-center text-xl text-gray-500">The news hasn't been found</div>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default NewPage;

@@ -1,73 +1,76 @@
-import { useState } from "react";
-import type { User } from "../types/user";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { loginSchema, type LoginSchema } from "../validation/schemas";
+import { useUserStore } from "../store/useUserStore";
+import TextInput from "./TextInput";
+import Button from "./Button";
 
 interface LoginFormProps {
-	onSwitch: () => void;
-	users: User[];
-	onLoginSuccess: () => void;
+  onSwitch: () => void;
+  onLoginSuccess: (token: string) => void;
 }
 
-export default function LoginForm({
-	onSwitch,
-	users,
-	onLoginSuccess,
-}: LoginFormProps) {
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
-	const [error, setError] = useState("");
+export default function LoginForm({ onSwitch, onLoginSuccess }: LoginFormProps) {
+  const setUser = useUserStore((state) => state.setUser);
 
-	const handleSubmit = (e: React.FormEvent) => {
-		e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm<LoginSchema>({
+    resolver: zodResolver(loginSchema),
+  });
 
-		const user = users.find(
-			(u) => u.email === email && u.password === password,
-		);
+  const onSubmit = async (data: LoginSchema) => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
 
-		if (!user) {
-			setError("Пользователь не найден");
-		} else {
-			setError("");
-			onLoginSuccess();
-		}
-	};
+      if (!res.ok) {
+        const errData = await res.json();
+        setError("email", { message: errData.message || "Login failed" });
+        return;
+      }
 
-	return (
-		<form className="flex flex-col gap-2" onSubmit={handleSubmit}>
-			<h2 className="text-xl font-bold mb-2">Logging in</h2>
-			{error && <div className="text-red-500">{error}</div>}
+      const result = await res.json();
+      localStorage.setItem("accessToken", result.accessToken);
+      setUser(result.user);
+      onLoginSuccess(result.accessToken);
+    } catch {
+      setError("email", { message: "Server error" });
+    }
+  };
 
-			<input
-				onChange={(e) => setEmail(e.target.value)}
-				value={email}
-				name="email"
-				className="border p-2 rounded"
-				type="email"
-				placeholder="Email"
-			/>
-			<input
-				onChange={(e) => setPassword(e.target.value)}
-				value={password}
-				name="password"
-				className="border p-2 rounded"
-				type="password"
-				placeholder="Password"
-			/>
-			<button
-				type="submit"
-				className="mt-2 bg-green-600 text-white p-2 rounded hover:bg-green-700 transition-colors"
-			>
-				Log in
-			</button>
-			<p className="mt-2 text-sm text-gray-600">
-				Have no account?{" "}
-				<button
-					type="button"
-					className="text-blue-600 hover:underline cursor-pointer bg-transparent border-0 p-0"
-					onClick={onSwitch}
-				>
-					Registrate
-				</button>
-			</p>
-		</form>
-	);
+  return (
+    <form className="flex flex-col gap-2" onSubmit={handleSubmit(onSubmit)}>
+      <h2 className="text-xl font-bold mb-2">Logging in</h2>
+
+      <TextInput
+        {...register("email")}
+        type="email"
+        placeholder="Email"
+      />
+      {errors.email && <div className="text-red-500">{errors.email.message}</div>}
+
+      <TextInput
+        {...register("password")}
+        type="password"
+        placeholder="Password"
+      />
+      {errors.password && <div className="text-red-500">{errors.password.message}</div>}
+
+      <Button type="submit">Log in</Button>
+
+      <p className="mt-2 text-sm text-gray-600">
+        Have no account?{" "}
+        <Button type="button" variant="link" onClick={onSwitch}>
+          Register
+        </Button>
+      </p>
+    </form>
+  );
 }
