@@ -27,10 +27,29 @@ export default defineConfig({
 			gzipSize: true,
 			brotliSize: true,
 		}),
+		{
+			name: "virtual:mock",
+			resolveId(id) {
+				if (id === "virtual:mock") return id;
+			},
+			load(id) {
+				if (id === "virtual:mock") return "export const data = []";
+			},
+		},
 	],
 	build: {
 		rollupOptions: {
 			plugins: [terser()],
+		},
+		minify: "terser",
+		terserOptions: {
+			compress: {
+				drop_console: true,
+				drop_debugger: true,
+			},
+			format: {
+				comments: false,
+			},
 		},
 	},
 });

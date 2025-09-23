@@ -2,77 +2,89 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useUserStore } from "../store/useUserStore";
 import { type LoginSchema, loginSchema } from "../validation/schemas";
+import Button from "./Button";
+import TextInput from "./TextInput";
+import { useMutation } from "@tanstack/react-query";
 
 interface LoginFormProps {
-	onSwitch: () => void;
-	onLoginSuccess: () => void;
+  onSwitch: () => void;
+  onLoginSuccess: (token: string) => void;
+}
+
+async function loginRequest(data: LoginSchema) {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+
+  if (!res.ok) {
+    const errData = await res.json();
+    throw new Error(errData.message || "Login failed");
+  }
+
+  return res.json();
 }
 
 export default function LoginForm({
-	onSwitch,
-	onLoginSuccess,
+  onSwitch,
+  onLoginSuccess,
 }: LoginFormProps) {
-	const login = useUserStore((state) => state.login);
+  const setUser = useUserStore((state) => state.setUser);
 
-	const {
-		register,
-		handleSubmit,
-		setError,
-		formState: { errors },
-	} = useForm<LoginSchema>({
-		resolver: zodResolver(loginSchema),
-	});
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm<LoginSchema>({
+    resolver: zodResolver(loginSchema),
+  });
 
-	const onSubmit = (data: LoginSchema) => {
-		const user = login(data.email, data.password);
-		if (!user) {
-			setError("email", { message: "User hasnt been found" });
-		} else {
-			onLoginSuccess();
-		}
-	};
+  const mutation = useMutation({
+    mutationFn: loginRequest,
+    onSuccess: (result) => {
+      localStorage.setItem("accessToken", result.accessToken);
+      setUser(result.user);
+      onLoginSuccess(result.accessToken);
+    },
+    onError: (error) => {
+      setError("email", { message: error.message });
+    },
+  });
 
-	return (
-		<form className="flex flex-col gap-2" onSubmit={handleSubmit(onSubmit)}>
-			<h2 className="text-xl font-bold mb-2">Logging in</h2>
+  const onSubmit = (data: LoginSchema) => {
+    mutation.mutate(data);
+  };
 
-			<input
-				{...register("email")}
-				className="border p-2 rounded"
-				type="email"
-				placeholder="Email"
-			/>
-			{errors.email && (
-				<div className="text-red-500">{errors.email.message}</div>
-			)}
+  return (
+    <form className="flex flex-col gap-2" onSubmit={handleSubmit(onSubmit)}>
+      <h2 className="text-xl font-bold mb-2">Logging in</h2>
 
-			<input
-				{...register("password")}
-				className="border p-2 rounded"
-				type="password"
-				placeholder="Password"
-			/>
-			{errors.password && (
-				<div className="text-red-500">{errors.password.message}</div>
-			)}
+      <TextInput {...register("email")} type="email" placeholder="Email" />
+      {errors.email && (
+        <div className="text-red-500">{errors.email.message}</div>
+      )}
 
-			<button
-				type="submit"
-				className="mt-2 bg-green-600 text-white p-2 rounded hover:bg-green-700 transition-colors"
-			>
-				Log in
-			</button>
+      <TextInput
+        {...register("password")}
+        type="password"
+        placeholder="Password"
+      />
+      {errors.password && (
+        <div className="text-red-500">{errors.password.message}</div>
+      )}
 
-			<p className="mt-2 text-sm text-gray-600">
-				Have no account?{" "}
-				<button
-					type="button"
-					className="text-blue-600 hover:underline cursor-pointer bg-transparent border-0 p-0"
-					onClick={onSwitch}
-				>
-					Registrate
-				</button>
-			</p>
-		</form>
-	);
+      <Button type="submit" disabled={mutation.isPending}>
+        {mutation.isPending ? "Logging in..." : "Log in"}
+      </Button>
+
+      <div className="mt-2 text-sm text-gray-600 flex items-center gap-1">
+        <span>Have no account?</span>
+        <Button type="button" variant="link" onClick={onSwitch}>
+          Register
+        </Button>
+      </div>
+    </form>
+  );
 }

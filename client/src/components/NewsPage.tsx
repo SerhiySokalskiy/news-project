@@ -1,8 +1,28 @@
-import { useNewsStore } from "../store/newsStore";
+import { useQuery } from "@tanstack/react-query";
+import type { NewsType } from "../types/new";
 import NewPreview from "./NewPreview";
 
 const NewsPage = () => {
-	const news = useNewsStore((state) => state.news);
+	const fetchNews = async (): Promise<NewsType[]> => {
+		const res = await fetch(`${import.meta.env.VITE_API_URL}/feed`);
+		if (!res.ok) {
+			throw new Error("Failed to fetch news");
+		}
+		const data = await res.json();
+		return data.feed;
+	};
+
+	const {
+		data: news,
+		isLoading,
+		isError,
+	} = useQuery<NewsType[], Error>({
+		queryKey: ["news"],
+		queryFn: fetchNews,
+	});
+
+	if (isLoading) return <p>Loading...</p>;
+	if (isError) return <p>Error loading news</p>;
 
 	return (
 		<div className="bg-gray-100 min-h-screen py-8">
@@ -10,13 +30,13 @@ const NewsPage = () => {
 				<h1 className="text-4xl font-semibold mb-8 text-center">News Page</h1>
 
 				<div className="flex flex-col gap-6">
-					{news.map((item) => (
+					{news?.map((item) => (
 						<NewPreview
 							key={item.id}
 							id={item.id}
 							title={item.title}
 							text={item.text}
-							img={item.img}
+							image={item.image}
 						/>
 					))}
 				</div>
