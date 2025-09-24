@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
+import AdSlot from "./AdSlot";
 
 export type NewsFullType = {
 	id: string;
@@ -35,7 +36,9 @@ const NewPage = () => {
 		return <p className="text-center mt-10 text-red-500">Error loading news</p>;
 
 	return (
-		<div className="bg-gray-100 min-h-screen py-8">
+		<div className="flex justify-around">
+		<AdSlot slotId="ad-slot" width={300} height={250} />
+			<div className="bg-gray-100 min-h-screen py-8">
 			<div className="max-w-5xl mx-auto px-4">
 				{item ? (
 					<div className="bg-white rounded-lg shadow-lg overflow-hidden">
@@ -64,6 +67,9 @@ const NewPage = () => {
 				)}
 			</div>
 		</div>
+		<AdSlot slotId="ad-slot2" width={300} height={250} />
+		</div>
+		
 	);
 };
 
