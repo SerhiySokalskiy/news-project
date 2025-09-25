@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import type { NewsType } from "../types/new";
 import NewPreview from "./NewPreview";
+import AdSlot from "./AdSlot";
 
 const NewsPage = () => {
 	const fetchNews = async (): Promise<NewsType[]> => {
@@ -25,10 +26,11 @@ const NewsPage = () => {
 	if (isError) return <p>Error loading news</p>;
 
 	return (
-		<div className="bg-gray-100 min-h-screen py-8">
+		<div className="flex justify-around">
+		<AdSlot slotId="ad-slot" width={300} height={250} />
+			<div className="bg-gray-100 min-h-screen py-8">
 			<div className="max-w-5xl mx-auto px-4">
 				<h1 className="text-4xl font-semibold mb-8 text-center">News Page</h1>
-
 				<div className="flex flex-col gap-6">
 					{news?.map((item) => (
 						<NewPreview
@@ -41,6 +43,8 @@ const NewsPage = () => {
 					))}
 				</div>
 			</div>
+		</div>
+		<AdSlot slotId="ad-slot2" width={300} height={250} />
 		</div>
 	);
 };

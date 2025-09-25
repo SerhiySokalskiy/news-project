@@ -4,6 +4,8 @@
 		"target": "ES2022",
 		"useDefineForClassFields": true,
 		"lib": ["ES2022", "DOM", "DOM.Iterable"],
+		"allowJs": true, 
+    	"checkJs": false,
 		"module": "ESNext",
 		"skipLibCheck": true,
 
@@ -23,5 +25,5 @@
 		"noFallthroughCasesInSwitch": true,
 		"noUncheckedSideEffectImports": true
 	},
-	"include": ["src"]
+	"include": ["src", "public/prebid10.10.0.js"]
 }

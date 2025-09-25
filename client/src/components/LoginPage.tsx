@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
+import AdSlot from "./AdSlot";
 
 export default function Auth() {
 	const [isLogin, setIsLogin] = useState(true);
@@ -12,7 +13,9 @@ export default function Auth() {
 	};
 
 	return (
-		<div className="flex items-center justify-center min-h-screen bg-gray-100">
+		<div className="flex justify-around">
+		<AdSlot slotId="ad-slot" width={300} height={250} />
+		<div className="flex items-center justify-center min-h-screen">
 			<div className="w-full max-w-sm p-6 border rounded-lg shadow-lg bg-white">
 				{isLogin ? (
 					<LoginForm
@@ -23,6 +26,8 @@ export default function Auth() {
 					<RegisterForm onSwitch={() => setIsLogin(true)} />
 				)}
 			</div>
+		</div>
+		<AdSlot slotId="ad-slot2" width={300} height={250} />
 		</div>
 	);
 }

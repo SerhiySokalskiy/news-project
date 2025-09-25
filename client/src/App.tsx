@@ -2,6 +2,7 @@ import { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
+import PrebidLogs from "./components/PrebitLogsPage";
 
 const NewsPage = lazy(() => import("./components/NewsPage"));
 const NewPage = lazy(() => import("./components/NewPage"));
@@ -19,6 +20,7 @@ function App() {
 						<Route path="/" element={<NewsPage />} />
 						<Route path="/login" element={<LoginPage />} />
 						<Route path="/news/:id" element={<NewPage />} />
+						<Route path="/prebitlogs" element={<PrebidLogs />} />
 						<Route path="*" element={<Navigate to="/" replace />} />
 					</Routes>
 				</Suspense>
