@@ -1,35 +1,69 @@
-import '../../public/prebid10.10.0.js';
-import { adUnits } from './config.js';
 
-window.pbjs = window.pbjs || {};
-window.pbjs.que = window.pbjs.que || [];
-
-export function requestAd(slotId) {
-  if (!window.pbjs) return;
-
-  window.pbjs.que.push(() => {
-    window.pbjs.addAdUnits(adUnits);
-
-    window.pbjs.onEvent('bidResponse', (bid) => {
-      if (bid.adUnitCode !== slotId) return;
-
-      const iframe = document.getElementById(slotId);
-      if (!iframe?.contentWindow) return;
-
-      const doc = iframe.contentWindow.document;
-      try {
-        window.pbjs.renderAd(doc, bid.adId);
-      } catch (e) {
-        console.error('Render error', e);
-      }
-    });
-
-    window.pbjs.onEvent('bidWon', (bid) => {
-      if (bid.adUnitCode === slotId) {
-        console.log('bidWon', bid);
-      }
-    });
-
-    window.pbjs.requestBids({ timeout: 2000 });
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    if (document.querySelector(`script[src="${src}"]`)) return resolve();
+    const script = document.createElement('script');
+    script.src = src;
+    script.async = true;
+    script.onload = resolve;
+    script.onerror = reject;
+    document.head.appendChild(script);
   });
 }
+
+export async function main() {
+  await loadScript('../../public/prebid10.10.0');
+  const adUnits = [
+    {
+      code: "ad-slot",
+      mediaTypes: { banner: { sizes: [[300, 250], [300, 600]] } },
+      bids: [
+        {
+          bidder: "adtelligent",
+          params: {
+            aid: 350975,
+          },
+        },
+      ],
+    },
+    {
+      code: "ad-slot2",
+      mediaTypes: { banner: { sizes: [[300, 250]] } },
+      bids: [
+        {
+          bidder: "adtelligent",
+          params: {
+            aid: 350975,
+          },
+        },
+      ],
+    },
+  ];
+
+  window.pbjs = window.pbjs || {};
+  pbjs.que = pbjs.que || [];
+
+  pbjs.que.push(function () {
+    pbjs.addAdUnits(adUnits);
+
+    setTimeout(() => {
+      pbjs.requestBids({
+        bidsBackHandler: () => {
+          adUnits.forEach(unit => {
+            const bids = pbjs.getHighestCpmBids(unit.code);
+            if (bids.length > 0) {
+              const iframe = document.getElementById(unit.code);
+              if (!iframe) return;
+              const doc = iframe.contentWindow.document;
+              pbjs.renderAd(doc, bids[0].adId);
+            }
+          });
+        },
+        timeout: 1000
+      });
+    }, 500);
+  });
+  window.dispatchEvent(new Event('prebid-ready'));
+}
+
+main()

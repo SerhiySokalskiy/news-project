@@ -1,11 +1,22 @@
 import { NavLink } from "react-router-dom";
 import { useUserStore } from "../store/useUserStore";
+import { useEffect, useState } from "react";
 
 export default function Navbar() {
 	const user = useUserStore((state) => state.user);
+
+	const [hasPrebid, setHasPrebid] = useState(false);
+
+  useEffect(() => {
+    const handler = () => setHasPrebid(true);
+    window.addEventListener('prebid-ready', handler);
+
+    return () => window.removeEventListener('prebid-ready', handler);
+  }, []);
+
 	return (
 		<nav className="flex space-x-4">
-			<NavLink
+			{hasPrebid && <NavLink
 				to="/prebitlogs"
 				className={({ isActive }) =>
 					`px-3 py-1 rounded transition ${
@@ -14,7 +25,7 @@ export default function Navbar() {
 				}
 			>
 				Prebit logs
-			</NavLink>
+			</NavLink>}
 			<NavLink
 				to="/"
 				className={({ isActive }) =>

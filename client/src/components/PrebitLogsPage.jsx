@@ -6,12 +6,12 @@ const PrebidLogs = () => {
 
   useEffect(() => {
     if (!window.pbjs) {
-      console.warn('Prebid.js не загружен');
+      console.warn('Prebid.js не завантажений');
       return;
     }
 
     const logEvent = (eventName, data) => {
-      setLogs(prevLogs => [...prevLogs, { eventName, data }]);
+      setLogs(prev => [...prev, { eventName, data }]);
       console.log(eventName, data);
     };
 
@@ -23,26 +23,36 @@ const PrebidLogs = () => {
 
     return () => {
       events.forEach(event => {
-        window.pbjs.offEvent(event);
+        if (window.pbjs.offEvent) {
+          window.pbjs.offEvent(event);
+        }
       });
     };
   }, []);
 
   return (
-    <div className="flex justify-around">
-            <AdSlot slotId="ad-slot" width={300} height={250} />
-                <div style={{ padding: '20px', fontFamily: 'monospace', background: '#f0f0f0', height: '100vh', overflowY: 'auto' }}>
-      <h2>Prebid Events Logs</h2>
-      <div>
-        {logs.map((log, index) => (
-          <div key={index} style={{ marginBottom: '5px', background: '#fff', padding: '5px', borderRadius: '3px' }}>
-            <strong>{log.eventName}</strong>: {JSON.stringify(log.data)}
+    <div className="flex flex-col lg:flex-row gap-4 p-4 min-h-screen">
+      <div className="flex-shrink-0">
+        <AdSlot slotId="ad-slot" width={300} height={250} />
+      </div>
+
+      <div className="flex-1 bg-gray-100 p-4 rounded-lg overflow-y-auto h-[80vh]">
+        <h2 className="text-xl font-bold mb-4">Prebid Event Logs</h2>
+        {logs.length === 0 && <p className="text-gray-500">Поки що немає подій...</p>}
+        {logs.map((log, idx) => (
+          <div
+            key={idx}
+            className="bg-white p-2 mb-2 rounded shadow-sm text-sm break-words"
+          >
+            <span className="font-semibold">{log.eventName}</span>: {JSON.stringify(log.data)}
           </div>
         ))}
       </div>
+
+      <div className="flex-shrink-0">
+        <AdSlot slotId="ad-slot2" width={300} height={250} />
+      </div>
     </div>
-            <AdSlot slotId="ad-slot2" width={300} height={250} />
-            </div> 
   );
 };
 
