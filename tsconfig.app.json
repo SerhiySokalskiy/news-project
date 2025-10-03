@@ -27,7 +27,7 @@
 	},
 	"include": [
 		"src",
-		"public/prebid10.10.0.js",
+		"public/prebid10.11.0.js",
 		"vite.config.ts",
 		"plugins/**/*.ts",
 		"types/**/*.d.ts"
