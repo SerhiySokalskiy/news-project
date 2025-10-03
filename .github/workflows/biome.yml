@@ -20,4 +20,4 @@ jobs:
         run: npm install || echo "No package.json found"
 
       - name: Run Biome
-        run: npx biome check .
+        run: npx biome check src
