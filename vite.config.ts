@@ -39,4 +39,5 @@ export default defineConfig(({ mode }) => ({
 			format: { comments: false },
 		},
 	},
+	base: './',
 }));
