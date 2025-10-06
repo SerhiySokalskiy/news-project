@@ -88,7 +88,7 @@ export class EventTracker {
 	private flush() {
 		if (!this.enabled || this.cache.length === 0) return;
 
-		const payload = JSON.stringify(this.cache); // <-- тепер масив
+		const payload = JSON.stringify(this.cache);
 
 		const eventsToSend = [...this.cache];
 		this.cache = [];
@@ -107,13 +107,13 @@ export class EventTracker {
 			console.log(`[EventTracker] Flushed ${eventsToSend.length} events`);
 		} catch (err) {
 			console.warn("[EventTracker] flush failed:", err);
-			this.cache.unshift(...eventsToSend); // повертаємо події назад у кеш
+			this.cache.unshift(...eventsToSend); 
 		}
 	}
 
 	private flushOnUnload() {
 		if (this.cache.length === 0) return;
-		const payload = JSON.stringify(this.cache); // <-- масив
+		const payload = JSON.stringify(this.cache);
 		if (navigator.sendBeacon) {
 			const blob = new Blob([payload], { type: "application/json" });
 			navigator.sendBeacon(this.config.endpoint, blob);
