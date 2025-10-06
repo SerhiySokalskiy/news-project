@@ -56,7 +56,9 @@ export default function EventsPage() {
 			query.append("offset", offset.toString());
 			query.append("limit", limit.toString());
 
-			const res = await fetch(`${import.meta.env.VITE_API_URL}/events?${query.toString()}`);
+			const res = await fetch(
+				`${import.meta.env.VITE_API_URL}/events?${query.toString()}`,
+			);
 			if (!res.ok) throw new Error("Failed to fetch events");
 
 			const json = await res.json();

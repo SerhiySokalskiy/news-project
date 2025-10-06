@@ -56,50 +56,43 @@ async function main() {
 	await loadScript("/prebid10.11.0.js");
 
 	const adUnits = [
-  {
-    code: "ad-slot",
-    mediaTypes: {
-      banner: {
-        sizes: [
-          [300, 250],
-          [300, 600],
-        ],
-      },
-    },
-    bids: [
-      { bidder: "adtelligent", params: { aid: 350975 } },
-    ],
-  },
-  {
-    code: "ad-slot2",
-    mediaTypes: { banner: { sizes: [[300, 250]] } },
-    bids: [
-      { bidder: "adtelligent", params: { aid: 350975 } },
-    ],
-  },
-  {
-    code: "ad-slot3",
-    mediaTypes: {
-      banner: {
-        sizes: [
-          [300, 250],
-        ],
-      },
-    },
-    bids: [
-      {
-        bidder: "sokalskiy",
-        params: {
-          size: "300x250",
-          cpm: 110,
-          geo: "Ukr",
-          adType: "banner",
-        },
-      },
-    ],
-  },
-];
-
+		{
+			code: "ad-slot",
+			mediaTypes: {
+				banner: {
+					sizes: [
+						[300, 250],
+						[300, 600],
+					],
+				},
+			},
+			bids: [{ bidder: "adtelligent", params: { aid: 350975 } }],
+		},
+		{
+			code: "ad-slot2",
+			mediaTypes: { banner: { sizes: [[300, 250]] } },
+			bids: [{ bidder: "adtelligent", params: { aid: 350975 } }],
+		},
+		{
+			code: "ad-slot3",
+			mediaTypes: {
+				banner: {
+					sizes: [[300, 250]],
+				},
+			},
+			bids: [
+				{
+					bidder: "sokalskiy",
+					params: {
+						size: "300x250",
+						cpm: 110,
+						geo: "Ukr",
+						adType: "banner",
+					},
+				},
+			],
+		},
+	];
 
 	window.pbjs = window.pbjs || {};
 	pbjs.que = pbjs.que || [];

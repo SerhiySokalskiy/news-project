@@ -32,6 +32,6 @@ export interface TrackedEvent<T extends EventName = EventName> {
 }
 
 export type AggregatedEvent = {
-  values: TrackedEvent;
-  count: number;
+	values: TrackedEvent;
+	count: number;
 };
