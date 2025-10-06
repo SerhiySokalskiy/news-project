@@ -73,6 +73,25 @@ async function main() {
 			mediaTypes: { banner: { sizes: [[300, 250]] } },
 			bids: [{ bidder: "adtelligent", params: { aid: 350975 } }],
 		},
+		{
+			code: "ad-slot3",
+			mediaTypes: {
+				banner: {
+					sizes: [[300, 250]],
+				},
+			},
+			bids: [
+				{
+					bidder: "sokalskiy",
+					params: {
+						size: "300x250",
+						cpm: 110,
+						geo: "Ukr",
+						adType: "banner",
+					},
+				},
+			],
+		},
 	];
 
 	window.pbjs = window.pbjs || {};
