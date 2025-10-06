@@ -27,7 +27,7 @@ const NewsPage = () => {
 
 	return (
 		<div className="flex justify-around">
-			<AdSlot slotId="ad-slot" width={300} height={250} />
+			<AdSlot slotId="ad-slot3" width={300} height={250} />
 			<div className="bg-gray-100 min-h-screen py-8">
 				<div className="max-w-5xl mx-auto px-4">
 					<h1 className="text-4xl font-semibold mb-8 text-center">News Page</h1>

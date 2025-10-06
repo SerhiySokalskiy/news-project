@@ -33,6 +33,13 @@ function App() {
 						<Route path="/news/:id" element={<NewPage />} />
 						<Route path="/prebitlogs" element={<PrebidLogs />} />
 						<Route path="/events" element={<EventsPage />} />
+						<Route path="/form" element={
+  							<iframe
+    						src="http://localhost:3000/form"
+    						style={{ width: '100%', height: '100vh', border: 'none' }}
+    						title="Server Form"
+  						/>
+						} />
 						<Route path="*" element={<Navigate to="/" replace />} />
 					</Routes>
 				</Suspense>

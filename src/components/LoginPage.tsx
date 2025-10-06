@@ -27,7 +27,7 @@ export default function Auth() {
 					)}
 				</div>
 			</div>
-			<AdSlot slotId="ad-slot2" width={300} height={250} />
+			<AdSlot slotId="ad-slot3" width={300} height={250} />
 		</div>
 	);
 }

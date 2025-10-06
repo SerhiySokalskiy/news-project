@@ -30,3 +30,8 @@ export interface TrackedEvent<T extends EventName = EventName> {
 	userAgent: string;
 	data: EventPayloads[T];
 }
+
+export type AggregatedEvent = {
+  values: TrackedEvent;
+  count: number;
+};
