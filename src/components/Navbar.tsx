@@ -82,9 +82,6 @@ export default function Navbar() {
 			>
 				Login
 			</NavLink>
-
-			{user && <span className="p-1">Welcome, {user.name}</span>}
-
 			{user && (
 				<>
 					<span className="p-1">Welcome, {user.name}</span>
